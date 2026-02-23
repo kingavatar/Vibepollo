@@ -206,42 +206,7 @@ namespace update {
           if (a.patch != b.patch) {
             return (a.patch < b.patch) ? -1 : 1;
           }
-          if (a.pre.empty() && b.pre.empty()) {
-            return 0;
-          }
-          if (a.pre.empty()) {
-            return 1;
-          }
-          if (b.pre.empty()) {
-            return -1;
-          }
-          const size_t len = std::max(a.pre.size(), b.pre.size());
-          for (size_t i = 0; i < len; ++i) {
-            if (i >= a.pre.size()) {
-              return -1;
-            }
-            if (i >= b.pre.size()) {
-              return 1;
-            }
-            const auto &ai = a.pre[i];
-            const auto &bi = b.pre[i];
-            const bool a_num = std::holds_alternative<int>(ai);
-            const bool b_num = std::holds_alternative<int>(bi);
-            if (a_num && b_num) {
-              int av = std::get<int>(ai), bv = std::get<int>(bi);
-              if (av != bv) {
-                return (av < bv) ? -1 : 1;
-              }
-            } else if (a_num != b_num) {
-              return a_num ? -1 : 1;  // numeric < non-numeric
-            } else {
-              const auto &as = std::get<std::string>(ai);
-              const auto &bs = std::get<std::string>(bi);
-              if (as != bs) {
-                return (as < bs) ? -1 : 1;
-              }
-            }
-          }
+          // Ignore prerelease segment when comparing versions
           return 0;
         };
 
